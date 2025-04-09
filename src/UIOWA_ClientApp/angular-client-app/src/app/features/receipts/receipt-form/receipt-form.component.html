@@ -1,1 +1,66 @@
-<p>receipt-form works!</p>
+<div class="receipt-form-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Submit a Receipt</mat-card-title>
+      <mat-card-subtitle>Fill out the form to submit a receipt for reimbursement</mat-card-subtitle>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <form [formGroup]="receiptForm" (ngSubmit)="onSubmit()">
+        <div class="form-field-container">
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Purchase Date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="purchaseDate" required>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="receiptForm.get('purchaseDate')?.hasError('required')">
+              Purchase date is required
+            </mat-error>
+          </mat-form-field>
+          
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Amount ($)</mat-label>
+            <input matInput type="number" step="0.01" formControlName="amount" required>
+            <mat-error *ngIf="receiptForm.get('amount')?.hasError('required')">
+              Amount is required
+            </mat-error>
+            <mat-error *ngIf="receiptForm.get('amount')?.hasError('min')">
+              Amount must be greater than 0
+            </mat-error>
+            <mat-error *ngIf="receiptForm.get('amount')?.hasError('max')">
+              Amount cannot exceed $99,999.99
+            </mat-error>
+          </mat-form-field>
+          
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" rows="3"></textarea>
+            <mat-error *ngIf="receiptForm.get('description')?.hasError('maxlength')">
+              Description cannot exceed 500 characters
+            </mat-error>
+          </mat-form-field>
+          
+          <div class="file-upload-container">
+            <button type="button" mat-raised-button color="primary" (click)="fileInput.click()">
+              Choose Receipt File
+            </button>
+            <input #fileInput type="file" accept=".pdf,.jpg,.jpeg,.png" hidden (change)="onFileSelected($event)">
+            <span class="file-name" *ngIf="fileName">{{ fileName }}</span>
+            <div class="file-requirements">
+              <small>Accepted file types: PDF, JPEG, PNG | Max size: 5MB</small>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-actions">
+          <button mat-raised-button color="accent" type="button" routerLink="/receipts">Cancel</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="receiptForm.invalid || !selectedFile || isSubmitting">
+            Submit Receipt
+          </button>
+        </div>
+      </form>
+      
+      <mat-progress-bar *ngIf="isSubmitting" mode="indeterminate"></mat-progress-bar>
+    </mat-card-content>
+  </mat-card>
+</div>

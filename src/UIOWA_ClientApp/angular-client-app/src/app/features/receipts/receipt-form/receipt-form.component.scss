@@ -1,0 +1,53 @@
+.receipt-form-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.form-field-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.file-upload-container {
+  margin: 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.file-name {
+  margin-top: 0.5rem;
+  font-style: italic;
+  word-break: break-all;
+}
+
+.file-requirements {
+  color: rgba(0, 0, 0, 0.54);
+  margin-top: 0.25rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+mat-card {
+  padding: 1rem;
+}
+
+mat-card-header {
+  margin-bottom: 1.5rem;
+}
+
+mat-progress-bar {
+  margin-top: 2rem;
+}

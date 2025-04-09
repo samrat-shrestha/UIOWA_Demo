@@ -5,9 +5,7 @@
     </div>
     <nav class="main-nav">
       <ul>
-        <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a></li>
         <li *ngIf="isAuthenticated"><a routerLink="/receipts" routerLinkActive="active">My Receipts</a></li>
-        <li *ngIf="isAuthenticated"><a routerLink="/receipts/submit" routerLinkActive="active">Submit Receipt</a></li>
       </ul>
     </nav>
     <div class="auth-controls">
