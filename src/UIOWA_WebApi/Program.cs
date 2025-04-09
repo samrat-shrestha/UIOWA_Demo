@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // ----- Services -----
-// Get database connection string from configuration
 var conn = builder.Configuration.GetConnectionString("Default") ?? "Data Source=app.db";
+Console.WriteLine($"CS: {conn}");
 
 builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseSqlite(conn));
