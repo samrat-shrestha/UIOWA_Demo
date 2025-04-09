@@ -1,0 +1,6 @@
+@UIOWA_WebApi_HostAddress = http://localhost:5291
+
+GET {{UIOWA_WebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
