@@ -1,0 +1,12 @@
+<div class="callback-container">
+  <div class="callback-card">
+    <div *ngIf="loading" class="loading-container">
+      <div class="spinner"></div>
+      <p>Processing your login...</p>
+    </div>
+    <div *ngIf="!loading && error" class="error-container">
+      <p class="error-message">{{ error }}</p>
+      <button class="retry-button" routerLink="/login">Try Again</button>
+    </div>
+  </div>
+</div>

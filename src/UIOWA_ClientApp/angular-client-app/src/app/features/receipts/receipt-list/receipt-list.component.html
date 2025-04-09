@@ -1,0 +1,39 @@
+<div class="receipts-container">
+  <div class="receipts-header">
+    <h1>My Receipts</h1>
+    <a class="submit-button" routerLink="/receipts/submit">Submit New Receipt</a>
+  </div>
+
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Loading receipts...</p>
+  </div>
+
+  <div *ngIf="!loading && error" class="error-container">
+    <p class="error-message">{{ error }}</p>
+    <button class="retry-button" (click)="loadReceipts()">Try Again</button>
+  </div>
+
+  <div *ngIf="!loading && !error && receipts.length === 0" class="empty-container">
+    <p>You haven't submitted any receipts yet.</p>
+    <a class="submit-button" routerLink="/receipts/submit">Submit Your First Receipt</a>
+  </div>
+
+  <div *ngIf="!loading && !error && receipts.length > 0" class="receipts-list">
+    <div class="receipts-table-header">
+      <div class="date-column">Date</div>
+      <div class="description-column">Description</div>
+      <div class="amount-column">Amount</div>
+      <div class="actions-column">Actions</div>
+    </div>
+    
+    <div *ngFor="let receipt of receipts" class="receipt-item">
+      <div class="date-column">{{ formatDate(receipt.purchaseDate) }}</div>
+      <div class="description-column">{{ receipt.description }}</div>
+      <div class="amount-column">{{ formatCurrency(receipt.amount) }}</div>
+      <div class="actions-column">
+        <a [routerLink]="['/receipts', receipt.id]" class="view-button">View Details</a>
+      </div>
+    </div>
+  </div>
+</div>

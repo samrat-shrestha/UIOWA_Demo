@@ -7,9 +7,9 @@ obj/
 
 Migrations/
 
-src/UIOWA_ClientApp/node_modules/
-src/UIOWA_ClientApp/dist/
-src/UIOWA_ClientApp/.angular/
+src/UIOWA_ClientApp/angular-client-app/node_modules/
+src/UIOWA_ClientApp/angular-client-app/dist/
+src/UIOWA_ClientApp/angular-client-app/.angular/
 
 .vscode/
 .idea/

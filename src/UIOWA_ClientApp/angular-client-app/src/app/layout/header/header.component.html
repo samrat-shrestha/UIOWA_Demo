@@ -1,0 +1,23 @@
+<header class="app-header">
+  <div class="header-container">
+    <div class="logo">
+      <a routerLink="/">UIOWA Reimbursement</a>
+    </div>
+    <nav class="main-nav">
+      <ul>
+        <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a></li>
+        <li *ngIf="isAuthenticated"><a routerLink="/receipts" routerLinkActive="active">My Receipts</a></li>
+        <li *ngIf="isAuthenticated"><a routerLink="/receipts/submit" routerLinkActive="active">Submit Receipt</a></li>
+      </ul>
+    </nav>
+    <div class="auth-controls">
+      <ng-container *ngIf="isAuthenticated; else loginButton">
+        <span class="user-info">Welcome, {{ userName }}</span>
+        <button class="logout-btn" (click)="logout()">Logout</button>
+      </ng-container>
+      <ng-template #loginButton>
+        <button class="login-btn" (click)="login()">Login</button>
+      </ng-template>
+    </div>
+  </div>
+</header>
