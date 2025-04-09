@@ -23,4 +23,9 @@ public class ReceiptRepository : IReceiptRepository
             .ThenByDescending(r => r.CreatedUtc)
             .ToListAsync(ct);
     }
+    
+    public async Task<Receipt?> GetByIdAsync(Guid id, CancellationToken ct = default)
+    {
+        return await _db.Receipts.FindAsync(new object[] { id }, ct);
+    }
 }

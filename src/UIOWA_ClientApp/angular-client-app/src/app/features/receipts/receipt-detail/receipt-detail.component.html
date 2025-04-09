@@ -1,1 +1,57 @@
-<p>receipt-detail works!</p>
+<div class="receipt-detail-container">
+  <div class="back-button-container">
+    <button (click)="goBack()" class="back-button">← Back to Receipts</button>
+  </div>
+
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading receipt details...</p>
+  </div>
+
+  <div *ngIf="!loading && error" class="error-container">
+    <p class="error-message">{{ error }}</p>
+    <button *ngIf="error !== 'Receipt not found'" (click)="loadReceipt()" class="retry-button">
+      Try Again
+    </button>
+  </div>
+
+  <div *ngIf="!loading && !error && receipt" class="receipt-card-container">
+    <mat-card class="receipt-card">
+      <mat-card-header>
+        <mat-card-title>Receipt Details</mat-card-title>
+        <mat-card-subtitle>{{ formatDate(receipt.purchaseDate) }}</mat-card-subtitle>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <div class="receipt-info">
+          <div class="receipt-field">
+            <span class="field-label">Amount:</span>
+            <span class="field-value">{{ formatCurrency(receipt.amount) }}</span>
+          </div>
+          
+          <div class="receipt-field">
+            <span class="field-label">Description:</span>
+            <span class="field-value">{{ receipt.description || 'No description provided' }}</span>
+          </div>
+          
+          <div class="receipt-field">
+            <span class="field-label">Submitted on:</span>
+            <span class="field-value">{{ formatDateTime(receipt.createdUtc) }}</span>
+          </div>
+          
+          <div class="receipt-field">
+            <span class="field-label">Receipt ID:</span>
+            <span class="field-value receipt-id">{{ receipt.id }}</span>
+          </div>
+        </div>
+        
+        <div class="receipt-image-container">
+          <h3>Receipt Image</h3>
+          <button mat-button color="primary" (click)="downloadReceipt()">
+            View/Download Receipt
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

@@ -46,6 +46,14 @@ export class ApiService {
       .pipe(catchError(this.handleError));
   }
 
+  getBlob(path: string): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/${path}`, {
+      headers: this.defaultHeaders,
+      responseType: 'blob'
+    })
+      .pipe(catchError(this.handleError));
+  }
+
   private handleError(error: any) {
     console.error('API error', error);
     return throwError(() => error);

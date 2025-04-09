@@ -15,15 +15,23 @@ export class AuthService {
   
   // Add a flag to manually control authentication state for testing
   private _mockAuthState = false;
+  private readonly AUTH_STATE_KEY = 'app_auth_state';
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     this.isBrowser = isPlatformBrowser(this.platformId);
     
     // Only initialize Okta on the browser
     if (this.isBrowser) {
+      // Load cached auth state if available
+      this.loadCachedAuthState();
+      
       this.oktaAuth = new OktaAuth(environment.oktaConfig);
       this.oktaAuth.authStateManager.subscribe((authState) => {
         this.authStateSubject.next(authState);
+        // Cache auth state to localStorage
+        if (authState) {
+          this.cacheAuthState(authState.isAuthenticated || false);
+        }
       });
     }
   }
@@ -50,6 +58,9 @@ export class AuthService {
         // Explicitly update the auth state subject to notify subscribers
         this.authStateSubject.next({ isAuthenticated: false } as AuthState);
         console.log('Auth state updated after logout');
+        
+        // Remove cached auth state
+        localStorage.removeItem(this.AUTH_STATE_KEY);
       } catch (error) {
         console.error('Okta logout error:', error);
         
@@ -57,6 +68,9 @@ export class AuthService {
         this.clearOktaStorage();
         this.authStateSubject.next({ isAuthenticated: false } as AuthState);
         console.log('Auth state updated after logout (error case)');
+        
+        // Remove cached auth state
+        localStorage.removeItem(this.AUTH_STATE_KEY);
       }
     }
   }
@@ -79,14 +93,30 @@ export class AuthService {
   async isAuthenticated(): Promise<boolean> {
     console.log('Checking if user is authenticated...');
     
+    // For testing
+    if (this._mockAuthState) {
+      return true;
+    }
+    
     if (this.isBrowser) {
       try {
+        // First check Okta
         const isAuth = await this.oktaAuth.isAuthenticated();
         console.log('Okta reports authentication status:', isAuth);
+        
+        // If authenticated, cache the state
+        if (isAuth) {
+          this.cacheAuthState(true);
+        }
+        
         return isAuth;
       } catch (error) {
         console.error('Error checking authentication status:', error);
-        return false;
+        
+        // Fall back to cached state if available
+        const cachedState = this.getCachedAuthState();
+        console.log('Falling back to cached auth state:', cachedState);
+        return cachedState;
       }
     }
     return false;
@@ -121,13 +151,59 @@ export class AuthService {
   handleAuthentication(): Promise<void> {
     if (this.isBrowser) {
       try {
-        return this.oktaAuth.handleLoginRedirect();
+        return this.oktaAuth.handleLoginRedirect().then(() => {
+          // Cache auth state after successful login
+          this.cacheAuthState(true);
+          return Promise.resolve();
+        });
       } catch (error) {
         console.error('Error handling authentication callback:', error);
         return Promise.resolve();
       }
     }
     return Promise.resolve();
+  }
+  
+  // Cache auth state in localStorage
+  private cacheAuthState(isAuthenticated: boolean): void {
+    if (this.isBrowser) {
+      try {
+        localStorage.setItem(this.AUTH_STATE_KEY, JSON.stringify({ isAuthenticated, timestamp: new Date().getTime() }));
+        console.log('Auth state cached:', isAuthenticated);
+      } catch (error) {
+        console.error('Error caching auth state:', error);
+      }
+    }
+  }
+  
+  // Get cached auth state from localStorage
+  private getCachedAuthState(): boolean {
+    if (this.isBrowser) {
+      try {
+        const cachedData = localStorage.getItem(this.AUTH_STATE_KEY);
+        if (cachedData) {
+          const data = JSON.parse(cachedData);
+          // Consider cache valid for 24 hours (86400000 ms)
+          const isValid = (new Date().getTime() - data.timestamp) < 86400000;
+          return isValid && data.isAuthenticated;
+        }
+      } catch (error) {
+        console.error('Error reading cached auth state:', error);
+      }
+    }
+    return false;
+  }
+  
+  // Load cached auth state on service initialization
+  private loadCachedAuthState(): void {
+    const isAuthenticated = this.getCachedAuthState();
+    if (isAuthenticated) {
+      this.authStateSubject.next({ isAuthenticated: true } as AuthState);
+      console.log('Initialized with cached auth state: authenticated');
+    } else {
+      this.authStateSubject.next({ isAuthenticated: false } as AuthState);
+      console.log('Initialized with cached auth state: not authenticated');
+    }
   }
   
   // For testing only - mock the login state

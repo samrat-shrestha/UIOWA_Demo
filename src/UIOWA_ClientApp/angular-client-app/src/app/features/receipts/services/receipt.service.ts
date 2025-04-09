@@ -42,4 +42,8 @@ export class ReceiptService {
 
     return this.apiService.post<Receipt>('receipts', formData);
   }
+
+  downloadReceipt(id: string): Observable<Blob> {
+    return this.apiService.getBlob(`receipts/${id}/download`);
+  }
 }
