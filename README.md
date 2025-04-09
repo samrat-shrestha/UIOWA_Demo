@@ -1,6 +1,6 @@
-# UIOWA Receipt Reimbursement System
+# Receipt Reimbursement System
 
-A full-stack web application for university employees to submit and manage receipts for reimbursement.
+A full-stack web application for employees to submit and manage receipts for reimbursement.
 
 ## Project Overview
 
@@ -19,14 +19,6 @@ This application provides a clean, user-friendly interface for employees to subm
 - **Framework**: Angular 19
 - **UI Components**: Angular Material
 - **Authentication**: Okta Auth
-
-### Why This Stack?
-- **.NET**: Provides excellent performance, robust API design capabilities, and strong typing
-- **Angular**: Offers component-based architecture, TypeScript for better type safety, and great tooling
-- **Clean Architecture**: Ensures separation of concerns, testability, and maintainability
-- **CQRS with MediatR**: Simplifies handling business logic and promotes single responsibility
-- **SQLite**: Lightweight database requiring no setup, perfect for demonstration purposes
-- **Okta**: Enterprise-grade authentication with minimal configuration
 
 ## Project Structure
 
@@ -54,8 +46,8 @@ This application provides a clean, user-friendly interface for employees to subm
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/UIOWA.git
-   cd UIOWA
+   git clone <url>
+   cd UIOWA_Demo
    ```
 
 2. Build and run the API:
