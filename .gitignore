@@ -1,11 +1,15 @@
 bin/
 obj/
-*.db             
-Migrations/      
 
-/UIOWA_ClientApp/node_modules/
-/UIOWA_ClientApp/dist/
-/UIOWA_ClientApp/.angular/
+*.db
+*.db-shm
+*.db-wal
+
+Migrations/
+
+src/UIOWA_ClientApp/node_modules/
+src/UIOWA_ClientApp/dist/
+src/UIOWA_ClientApp/.angular/
 
 .vscode/
 .idea/
@@ -15,4 +19,7 @@ Migrations/
 .DS_Store
 Thumbs.db
 
-/Receipts/
+src/UIOWA_WebApi/Receipts/
+src/UIOWA_WebApi/Data/
+
+*.log

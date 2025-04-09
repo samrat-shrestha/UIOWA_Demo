@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // ----- Services -----
+// Get database connection string from configuration
 var conn = builder.Configuration.GetConnectionString("Default") ?? "Data Source=app.db";
 
 builder.Services.AddDbContext<AppDbContext>(opt =>
