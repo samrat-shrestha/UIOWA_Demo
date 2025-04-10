@@ -7,18 +7,21 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using WebApi.Controllers;
 using Xunit;
+using Microsoft.AspNetCore.Hosting;
 
 namespace UIOWA_WebApi.Tests.Controllers;
 
 public class ReceiptsControllerTests
 {
     private readonly Mock<IMediator> _mockMediator;
+    private readonly Mock<IWebHostEnvironment> _mockEnvironment;
     private readonly ReceiptsController _controller;
 
     public ReceiptsControllerTests()
     {
         _mockMediator = new Mock<IMediator>();
-        _controller = new ReceiptsController(_mockMediator.Object);
+        _mockEnvironment = new Mock<IWebHostEnvironment>();
+        _controller = new ReceiptsController(_mockMediator.Object, _mockEnvironment.Object);
     }
 
     [Fact]

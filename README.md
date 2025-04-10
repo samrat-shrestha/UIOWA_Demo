@@ -67,6 +67,14 @@ To stop the containers, press Ctrl+C in the terminal, or run:
 ```bash
 docker compose down
 ```
+## Test Access
+
+For the purpose of reviewing this assessment, I've created a dedicated test account in Okta:
+
+- **Username**: test@test.com
+- **Password**: qwerty@123456789
+
+This account has standard permissions for demonstration purposes.
 
 ### Option 2: Running Directly
 
