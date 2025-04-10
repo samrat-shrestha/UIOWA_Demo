@@ -37,7 +37,42 @@ This application provides a clean, user-friendly interface for employees to subm
 
 ## Setup and Running the Application
 
-### Prerequisites
+There are two ways to run the application: directly with .NET/Node.js or using Docker.
+
+### Option 1: Running with Docker (Recommended)
+
+The easiest way to run the application is using Docker Compose, which will set up both the backend and frontend services with a single command.
+
+#### Prerequisites
+- Docker and Docker Compose
+
+#### Steps
+1. Clone the repository:
+   ```bash
+   git clone <url>
+   cd UIOWA_Demo
+   ```
+
+2. Build and start the containers:
+   ```bash
+   docker compose up --build
+   ```
+
+3. Access the application:
+   - Frontend: http://localhost:4200
+   - Backend API: http://localhost:5291
+   - Swagger documentation: http://localhost:5291/swagger
+
+To stop the containers, press Ctrl+C in the terminal, or run:
+```bash
+docker compose down
+```
+
+### Option 2: Running Directly
+
+If you prefer to run the application without Docker, follow these steps:
+
+#### Prerequisites
 - .NET 9.0 SDK
 - Node.js (v18+) and npm
 - Git

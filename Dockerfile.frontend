@@ -1,0 +1,18 @@
+# Single stage build
+FROM node:20-alpine
+WORKDIR /app
+
+# Copy package.json and package-lock.json
+COPY src/UIOWA_ClientApp/angular-client-app/package*.json ./
+
+# Install dependencies
+RUN npm ci
+
+# Copy the rest of the application code
+COPY src/UIOWA_ClientApp/angular-client-app/. .
+
+# Expose the port
+EXPOSE 80
+
+# Serve the application
+CMD ["npm", "run", "start", "--", "--host", "0.0.0.0", "--port", "80", "--disable-host-check"]

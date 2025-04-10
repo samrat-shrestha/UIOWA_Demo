@@ -1,0 +1,40 @@
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+WORKDIR /app
+
+# Copy csproj files and restore dependencies
+COPY *.sln .
+COPY src/Domain/*.csproj ./src/Domain/
+COPY src/Application/*.csproj ./src/Application/
+COPY src/Infrastructure/*.csproj ./src/Infrastructure/
+COPY src/UIOWA_WebApi/*.csproj ./src/UIOWA_WebApi/
+COPY tests/Domain.Tests/*.csproj ./tests/Domain.Tests/
+COPY tests/Application.Tests/*.csproj ./tests/Application.Tests/
+COPY tests/Infrastructure.Tests/*.csproj ./tests/Infrastructure.Tests/
+COPY tests/UIOWA_WebApi.Tests/*.csproj ./tests/UIOWA_WebApi.Tests/
+
+RUN dotnet restore
+
+# Copy source code
+COPY src/. ./src/
+COPY tests/. ./tests/
+
+# Build and publish the API
+RUN dotnet publish -c Release -o out src/UIOWA_WebApi/UIOWA_WebApi.csproj
+
+# Build the runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:9.0
+WORKDIR /app
+COPY --from=build /app/out .
+
+# Create directories for receipt storage and database
+RUN mkdir -p Receipts
+RUN mkdir -p Data
+VOLUME /app/Receipts
+VOLUME /app/Data
+
+# Set environment variables
+ENV ASPNETCORE_URLS=http://+:80
+ENV ASPNETCORE_ENVIRONMENT=Production
+
+EXPOSE 80
+ENTRYPOINT ["dotnet", "UIOWA_WebApi.dll"]
