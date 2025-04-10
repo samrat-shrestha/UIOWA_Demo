@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using Application.Common.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +36,9 @@ builder.Services.AddScoped<IReceiptRepository, ReceiptRepository>();
 builder.Services.AddScoped<IFileStore, LocalFileStore>();
 
 builder.Services.AddMediatR(typeof(SubmitReceiptCommand).Assembly);
+
+// Add AutoMapper
+builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<SubmitReceiptValidator>();

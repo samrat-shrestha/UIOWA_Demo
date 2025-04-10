@@ -3,6 +3,8 @@ using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
+using AutoMapper;
+using Application.DTOs;
 
 namespace WebApi.Controllers;
 
@@ -12,11 +14,13 @@ public class ReceiptsController : ControllerBase
 {
     private readonly IMediator _mediator;
     private readonly IWebHostEnvironment _environment;
+    private readonly IMapper _mapper;
 
-    public ReceiptsController(IMediator mediator, IWebHostEnvironment environment)
+    public ReceiptsController(IMediator mediator, IWebHostEnvironment environment, IMapper mapper)
     {
         _mediator = mediator;
         _environment = environment;
+        _mapper = mapper;
     }
 
     [HttpPost]
@@ -35,7 +39,7 @@ public class ReceiptsController : ControllerBase
         var query = new GetAllReceiptsQuery();
         var receipts = await _mediator.Send(query, ct);
         
-        var dtos = receipts.Select(MapToDto).ToList();
+        var dtos = _mapper.Map<List<ReceiptDto>>(receipts);
         return Ok(dtos);
     }
     
@@ -50,7 +54,7 @@ public class ReceiptsController : ControllerBase
         if (receipt == null)
             return NotFound();
             
-        return Ok(MapToDto(receipt));
+        return Ok(_mapper.Map<ReceiptDto>(receipt));
     }
     
     [HttpGet("{id}/download")]
@@ -87,14 +91,4 @@ public class ReceiptsController : ControllerBase
             _ => "application/octet-stream"
         };
     }
-
-    private static ReceiptDto MapToDto(Receipt receipt) => new()
-    {
-        Id = receipt.Id,
-        PurchaseDate = receipt.PurchaseDate,
-        Amount = receipt.Amount,
-        Description = receipt.Description,
-        ReceiptPath = receipt.ReceiptPath,
-        CreatedUtc = receipt.CreatedUtc
-    };
 }

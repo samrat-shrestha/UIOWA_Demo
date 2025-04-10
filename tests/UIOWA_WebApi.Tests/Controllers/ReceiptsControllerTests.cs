@@ -8,6 +8,8 @@ using Moq;
 using WebApi.Controllers;
 using Xunit;
 using Microsoft.AspNetCore.Hosting;
+using AutoMapper;
+using Application.DTOs;
 
 namespace UIOWA_WebApi.Tests.Controllers;
 
@@ -15,13 +17,42 @@ public class ReceiptsControllerTests
 {
     private readonly Mock<IMediator> _mockMediator;
     private readonly Mock<IWebHostEnvironment> _mockEnvironment;
+    private readonly Mock<IMapper> _mockMapper;
     private readonly ReceiptsController _controller;
 
     public ReceiptsControllerTests()
     {
         _mockMediator = new Mock<IMediator>();
         _mockEnvironment = new Mock<IWebHostEnvironment>();
-        _controller = new ReceiptsController(_mockMediator.Object, _mockEnvironment.Object);
+        _mockMapper = new Mock<IMapper>();
+        
+        // maoper setup here
+        _mockMapper
+            .Setup(m => m.Map<Application.DTOs.ReceiptDto>(It.IsAny<Receipt>()))
+            .Returns((Receipt r) => new Application.DTOs.ReceiptDto 
+            { 
+                Id = r.Id,
+                PurchaseDate = r.PurchaseDate,
+                Amount = r.Amount,
+                Description = r.Description,
+                ReceiptFileName = Path.GetFileName(r.ReceiptPath),
+                CreatedUtc = r.CreatedUtc
+            });
+            
+        _mockMapper
+            .Setup(m => m.Map<List<Application.DTOs.ReceiptDto>>(It.IsAny<List<Receipt>>()))
+            .Returns((List<Receipt> receipts) => receipts.Select(r => 
+                new Application.DTOs.ReceiptDto
+                {
+                    Id = r.Id,
+                    PurchaseDate = r.PurchaseDate,
+                    Amount = r.Amount,
+                    Description = r.Description,
+                    ReceiptFileName = Path.GetFileName(r.ReceiptPath),
+                    CreatedUtc = r.CreatedUtc
+                }).ToList());
+                
+        _controller = new ReceiptsController(_mockMediator.Object, _mockEnvironment.Object, _mockMapper.Object);
     }
 
     [Fact]
